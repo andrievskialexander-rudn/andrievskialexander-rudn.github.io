@@ -9,7 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- print page size is swapped by JS when orientation changes -->
-<style id="page-rule">@page { size: A4; margin: 11mm; }</style>
+<style id="page-rule">@page { size: A4; margin: 9mm; }</style>
 
 <style>
 :root{
@@ -188,13 +188,13 @@ a{color:inherit;text-decoration:none}
 /* ---------- print: clean A4 ---------- */
 @media print{
   :root{--ink:#11161c; --muted:#3f4a57; --faint:#6a7480; --line:#d7dce2; --chip:#fff; --sheet:#fff; --side:#fff; --bg:#fff}
-  html{font-size:14px}
+  html{font-size:11.5px}
   body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
   body::before{display:none}
   .bar{display:none}
   .stage{padding:0; display:block}
   .sheet{max-width:none; width:100%; margin:0; border:0; border-radius:0; box-shadow:none; animation:none; background:#fff; color:#11161c}
-  .sheet{display:grid; grid-template-columns:30% 1fr; grid-template-rows:auto 1fr; grid-template-areas:"idn body" "ext body"}
+  .sheet{display:grid; grid-template-columns:34% 1fr; grid-template-rows:auto 1fr; grid-template-areas:"idn body" "ext body"}
   .side{grid-area:idn; padding:0 14px 0 0}
   .extra{grid-area:ext; padding:10px 14px 0 0; border-top:0 !important}
   .body{grid-area:body; padding:0 0 0 16px; border-left:1px solid var(--line) !important; border-top:0 !important}
@@ -205,15 +205,36 @@ a{color:inherit;text-decoration:none}
   .chip{color:#2b333d; border:1px solid #c9ced6; background:#fff}
   .job{page-break-inside:avoid; break-inside:avoid}
   .section-title::before, .eyebrow::before, .job::before, .timeline::before, .identity .role, .job-org{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
-  .identity .name{font-size:21pt}
-  .section-title{font-size:10pt; margin-bottom:9pt}
-  .lead{font-size:9.4pt; line-height:1.45}
-  .job-title{font-size:10pt}
-  .bullets li{font-size:8.8pt; line-height:1.34}
-  .meta li,.job-date,.skill-cap{font-size:8pt}
-  .chip{font-size:8pt}
-  .block + .block, .body-cols{margin-top:14pt}
-  .job{padding-bottom:11pt}
+  .identity .name{font-size:16pt; line-height:1.0}
+  .section-title{font-size:8.5pt; margin-bottom:3pt}
+  .lead{font-size:7.8pt; line-height:1.23}
+  .job-title{font-size:8.4pt}
+  .job-org{font-size:7.6pt}
+  .eyebrow{font-size:8.2pt; margin-bottom:3pt}
+  .bullets li{font-size:7.4pt; line-height:1.2; margin-bottom:0.8pt}
+  .meta li,.job-date,.skill-cap{font-size:7pt}
+  .skill-cap{margin-bottom:2pt}
+  .meta li{margin-bottom:0.8pt}
+  .chip{font-size:6.7pt; padding:0.5px 4px}
+  .chips{gap:3px}
+  .block + .block, .body-cols{margin-top:5pt}
+  .side-block + .side-block{margin-top:6pt}
+  .job{padding-bottom:5pt}
+  .skill-group{margin-bottom:4pt}
+
+  /* Armenian is wordier: tighten a touch more so it still fits one page */
+  html[lang="hy"] .identity .name{font-size:15pt}
+  html[lang="hy"] .lead{font-size:7.1pt; line-height:1.16}
+  html[lang="hy"] .bullets li{font-size:6.8pt; line-height:1.12; margin-bottom:0.4pt}
+  html[lang="hy"] .job-title{font-size:7.8pt}
+  html[lang="hy"] .job-org{font-size:7.1pt}
+  html[lang="hy"] .section-title{font-size:8pt; margin-bottom:2.2pt}
+  html[lang="hy"] .eyebrow{font-size:7.8pt; margin-bottom:2.2pt}
+  html[lang="hy"] .chip{font-size:6.4pt}
+  html[lang="hy"] .skill-cap, html[lang="hy"] .meta li, html[lang="hy"] .job-date{font-size:6.7pt}
+  html[lang="hy"] .block + .block, html[lang="hy"] .body-cols{margin-top:3.5pt}
+  html[lang="hy"] .job{padding-bottom:3pt}
+  html[lang="hy"] .side-block + .side-block{margin-top:5pt}
 }
 </style>
 </head>
