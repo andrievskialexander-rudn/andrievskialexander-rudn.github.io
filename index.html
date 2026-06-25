@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alexander Andrievski — Project Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+Armenian:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- print page size is swapped by JS when orientation changes -->
+<style id="page-rule">@page { size: A4; margin: 11mm; }</style>
+
+<style>
+:root{
+  --bg:#070A0D; --sheet:#0E1318; --side:#0A0F14; --line:#232B34; --chip:#141B23;
+  --ink:#F2F5F8; --muted:#96A0AC; --faint:#6A7480;
+  --ember:#FF5A2C; --ember-2:#FFA23B; --ember-deep:#E23A1E;
+  --glow:rgba(255,90,44,.30);
+  --spine:linear-gradient(180deg,#FFA23B 0%,#FF5A2C 45%,#E23A1E 100%);
+  --f-display:'Space Grotesk','Noto Sans Armenian','Inter',system-ui,sans-serif;
+  --f-body:'Inter','Noto Sans Armenian',system-ui,sans-serif;
+  --f-mono:'JetBrains Mono','Noto Sans Armenian',ui-monospace,monospace;
+  --pad:clamp(20px,3vw,32px);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--f-body);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  min-height:100vh;
+}
+/* ambient data-center atmosphere */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(900px 420px at 78% -8%, var(--glow), transparent 60%),
+    radial-gradient(700px 380px at 6% 108%, rgba(255,90,44,.10), transparent 60%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,.022) 0 1px, transparent 1px 46px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,.022) 0 1px, transparent 1px 46px);
+}
+a{color:inherit;text-decoration:none}
+
+/* ---------- toolbar ---------- */
+.bar{
+  position:sticky; top:0; z-index:10;
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:11px clamp(14px,4vw,40px);
+  background:rgba(8,11,14,.82); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:center; gap:10px; margin-right:auto}
+.brand .mark{width:26px;height:26px;display:block;filter:drop-shadow(0 0 10px var(--glow))}
+.brand b{font-family:var(--f-display); font-weight:600; letter-spacing:.01em; font-size:.95rem}
+.brand .who{font-family:var(--f-mono); font-size:.6rem; color:var(--faint); letter-spacing:.18em; text-transform:uppercase; display:block; margin-top:1px}
+.controls{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.seg{display:inline-flex; padding:3px; gap:2px; background:var(--chip); border:1px solid var(--line); border-radius:999px}
+.seg button{
+  font-family:var(--f-mono); font-size:.72rem; letter-spacing:.04em;
+  color:var(--muted); background:transparent; border:0; cursor:pointer;
+  padding:6px 11px; border-radius:999px; line-height:1; transition:.18s;
+}
+.seg button:hover{color:var(--ink)}
+.seg button[aria-pressed="true"]{ color:#0a0c0f; background:linear-gradient(180deg,var(--ember-2),var(--ember)); font-weight:500; }
+.seg.orient button{display:inline-flex; align-items:center; gap:6px}
+.seg.orient svg{width:14px;height:14px}
+.print{
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+  font-family:var(--f-mono); font-size:.74rem; letter-spacing:.04em; color:var(--ink);
+  padding:8px 14px; border-radius:999px; border:1px solid transparent;
+  background:linear-gradient(180deg,rgba(255,162,59,.16),rgba(255,90,44,.16));
+  box-shadow:inset 0 0 0 1px rgba(255,90,44,.45);
+  transition:.18s;
+}
+.print:hover{box-shadow:inset 0 0 0 1px var(--ember), 0 0 22px var(--glow)}
+.print svg{width:15px;height:15px}
+
+/* ---------- stage + sheet ---------- */
+.stage{position:relative; z-index:1; padding:clamp(16px,3.5vw,40px); display:flex; justify-content:center}
+.sheet{
+  width:100%; background:var(--sheet); color:var(--ink);
+  border:1px solid rgba(255,255,255,.055); border-radius:16px;
+  box-shadow:0 34px 90px rgba(0,0,0,.6);
+  overflow:hidden; position:relative;
+  animation:rise .5s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes rise{from{opacity:0; transform:translateY(14px)} to{opacity:1; transform:none}}
+.sheet{max-width:1240px}
+
+/* ---------- sidebar ---------- */
+.side{position:relative; padding:var(--pad)}
+.extra{padding:var(--pad)}
+.side::before{ content:""; position:absolute; left:0; right:0; top:0; height:3px; background:var(--spine); }
+.identity .name{
+  font-family:var(--f-display); font-weight:600; line-height:1.02;
+  font-size:clamp(1.7rem,5vw,2.35rem); letter-spacing:-.015em; margin:2px 0 0;
+}
+.identity .role{
+  font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.14em;
+  font-size:.66rem; color:var(--ember-2); margin:12px 0 0; line-height:1.5;
+}
+.side-block{margin-top:26px}
+.eyebrow{
+  font-family:var(--f-mono); text-transform:uppercase; letter-spacing:.16em;
+  font-size:.62rem; color:var(--faint); margin:0 0 12px; display:flex; align-items:center; gap:8px;
+}
+.eyebrow::before{ content:""; width:14px; height:2px; background:var(--spine); border-radius:2px; flex:none; }
+.meta{list-style:none; margin:0; padding:0; display:grid; gap:7px}
+.meta li{font-family:var(--f-mono); font-size:.74rem; color:var(--muted); line-height:1.4; word-break:break-word}
+.meta .mail:hover{color:var(--ember-2)}
+.meta .relo{color:var(--ember-2)}
+
+.skill-group{margin-bottom:13px}
+.skill-cap{font-family:var(--f-mono); font-size:.6rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 7px}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chip{
+  font-size:.71rem; font-weight:500; color:var(--muted);
+  background:var(--chip); border:1px solid var(--line);
+  padding:4px 9px; border-radius:999px; line-height:1.3; transition:.16s;
+}
+.chip:hover{color:var(--ink); border-color:rgba(255,90,44,.5)}
+
+.edu-school{font-family:var(--f-display); font-weight:600; font-size:.92rem; margin:0}
+.edu-full{font-size:.74rem; color:var(--muted); margin:3px 0 0}
+.edu-field{font-size:.8rem; color:var(--ink); margin:7px 0 0; font-weight:500}
+.edu-note{font-size:.74rem; color:var(--muted); margin:5px 0 0; line-height:1.45}
+.langlist{list-style:none; margin:0; padding:0; display:grid; gap:6px}
+.langlist li{font-size:.78rem; color:var(--muted)}
+.langlist b{color:var(--ink); font-weight:600}
+
+/* ---------- body ---------- */
+.body{position:relative; padding:var(--pad)}
+.section-title{
+  font-family:var(--f-display); font-weight:600; text-transform:uppercase;
+  letter-spacing:.14em; font-size:.82rem; color:var(--ink);
+  margin:0 0 16px; display:flex; align-items:center; gap:10px;
+}
+.section-title::before{ content:""; width:4px; height:15px; background:var(--spine); border-radius:2px; flex:none; box-shadow:0 0 12px var(--glow); }
+.block + .block, .body-cols{margin-top:26px}
+.lead{font-size:.93rem; line-height:1.62; color:#D9DEE5; margin:0}
+.profile .eyebrow{margin-bottom:10px}
+
+/* experience timeline */
+.timeline{position:relative; padding-left:22px}
+.timeline::before{ content:""; position:absolute; left:6px; top:8px; bottom:6px; width:2px;
+  background:linear-gradient(180deg,var(--ember) 0%, rgba(255,90,44,.18) 92%, transparent); border-radius:2px; }
+.job{position:relative; padding:0 0 18px}
+.job:last-child{padding-bottom:0}
+.job::before{ content:""; position:absolute; left:-19.5px; top:5px; width:11px; height:11px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, var(--ember-2), var(--ember)); box-shadow:0 0 0 3px rgba(255,90,44,.16), 0 0 12px var(--glow); }
+.job-head{display:flex; justify-content:space-between; align-items:baseline; gap:12px; flex-wrap:wrap}
+.job-title{font-family:var(--f-display); font-weight:600; font-size:.96rem; color:var(--ink); margin:0; line-height:1.25}
+.job-date{font-family:var(--f-mono); font-size:.68rem; color:var(--faint); letter-spacing:.03em; white-space:nowrap}
+.job-org{font-size:.8rem; margin:4px 0 0; color:var(--ember-2); font-weight:500}
+.job-org .note{color:var(--muted); font-weight:400}
+.bullets{list-style:none; margin:9px 0 0; padding:0; display:grid; gap:6px}
+.bullets li{position:relative; padding-left:15px; font-size:.83rem; line-height:1.5; color:#C7CDD5}
+.bullets li::before{ content:""; position:absolute; left:0; top:.55em; width:5px; height:5px; border-radius:1.5px; background:var(--ember); }
+.proj .bullets{margin-top:0}
+
+/* ---------- responsive grid ---------- */
+@media (min-width:720px){
+  .sheet{
+    display:grid;
+    grid-template-columns:minmax(220px,31%) 1fr;
+    grid-template-rows:auto 1fr;
+    grid-template-areas:"idn body" "ext body";
+    align-items:start;
+  }
+  .side{grid-area:idn}
+  .extra{grid-area:ext; align-self:start; padding-top:4px; border-top:0}
+  .body{grid-area:body; border-top:0}
+  .side::before{display:none}
+  .body::before{ content:""; position:absolute; left:0; top:var(--pad); bottom:var(--pad); width:2px; background:var(--spine); border-radius:2px; }
+}
+@media (min-width:1100px){
+  .body-cols{display:grid; grid-template-columns:1.15fr 1fr; gap:30px; align-items:start}
+  .body-cols > .block + .block{margin-top:0}
+}
+@media (max-width:719px){
+  .body{border-top:1px solid var(--line)}
+  .extra{border-top:1px solid var(--line)}
+}
+@media (max-width:430px){ .brand .who{display:none} .brand b{font-size:.86rem} }
+
+@media (prefers-reduced-motion:reduce){ *{animation:none !important; transition:none !important} }
+
+/* ---------- print: clean A4 ---------- */
+@media print{
+  :root{--ink:#11161c; --muted:#3f4a57; --faint:#6a7480; --line:#d7dce2; --chip:#fff; --sheet:#fff; --side:#fff; --bg:#fff}
+  html{font-size:14px}
+  body{background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+  body::before{display:none}
+  .bar{display:none}
+  .stage{padding:0; display:block}
+  .sheet{max-width:none; width:100%; margin:0; border:0; border-radius:0; box-shadow:none; animation:none; background:#fff; color:#11161c}
+  .sheet{display:grid; grid-template-columns:30% 1fr; grid-template-rows:auto 1fr; grid-template-areas:"idn body" "ext body"}
+  .side{grid-area:idn; padding:0 14px 0 0}
+  .extra{grid-area:ext; padding:10px 14px 0 0; border-top:0 !important}
+  .body{grid-area:body; padding:0 0 0 16px; border-left:1px solid var(--line) !important; border-top:0 !important}
+  .side::before, .body::before{display:none}
+  .body-cols{display:block}
+  .lead{color:#222a33}
+  .bullets li{color:#222a33}
+  .chip{color:#2b333d; border:1px solid #c9ced6; background:#fff}
+  .job{page-break-inside:avoid; break-inside:avoid}
+  .section-title::before, .eyebrow::before, .job::before, .timeline::before, .identity .role, .job-org{ -webkit-print-color-adjust:exact; print-color-adjust:exact }
+  .identity .name{font-size:21pt}
+  .section-title{font-size:10pt; margin-bottom:9pt}
+  .lead{font-size:9.4pt; line-height:1.45}
+  .job-title{font-size:10pt}
+  .bullets li{font-size:8.8pt; line-height:1.34}
+  .meta li,.job-date,.skill-cap{font-size:8pt}
+  .chip{font-size:8pt}
+  .block + .block, .body-cols{margin-top:14pt}
+  .job{padding-bottom:11pt}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="brand">
+    <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#FFB24D"/><stop offset=".5" stop-color="#FF5A2C"/><stop offset="1" stop-color="#E23A1E"/>
+      </linearGradient></defs>
+      <path fill="url(#g)" d="M17.5 2c1.2 4.3-.7 6.8-2.8 8.9-2.4 2.4-5.2 4.7-5.2 9.1 0 4.6 3.4 8 7.5 8s7.5-3.1 7.5-7.8c0-2.3-1-4-2-5.4.2 1.7-.4 3-1.6 3.6.6-3.4-.8-6.6-3-8.9C16.9 9.4 18.6 6 17.5 2z"/>
+      <path fill="#0A0C0F" opacity=".25" d="M16 18.5c1.7 0 3 1.4 3 3.2 0 1.9-1.3 3.3-3 3.3s-3-1.5-3-3.3c0-1.3.7-2.3 1.6-2.8-.1.9.2 1.6.9 1.9-.3-1.1.1-1.9.5-1.5z"/>
+    </svg>
+    <span><b>Alexander Andrievski</b><span class="who" id="who">Project Manager</span></span>
+  </div>
+  <div class="controls">
+    <div class="seg langs" id="langs" role="group" aria-label="Language">
+      <button data-lang="en" aria-pressed="true">EN</button>
+      <button data-lang="hy" aria-pressed="false">Հայ</button>
+      <button data-lang="ru" aria-pressed="false">Рус</button>
+    </div>
+    <button class="print" id="printBtn">
+      <svg viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4.5 6V2.5h7V6"/><rect x="2.5" y="6" width="11" height="5.5" rx="1"/><path d="M4.5 9.5h7V14h-7z" fill="#0A0C0F"/></svg>
+      <span id="lbl-print">Print / PDF</span>
+    </button>
+  </div>
+</header>
+
+<main class="stage">
+  <article class="sheet" id="sheet">
+    <aside class="side">
+      <div class="identity">
+        <h1 class="name" data-k="name"></h1>
+        <p class="role" data-k="role"></p>
+      </div>
+
+      <section class="side-block">
+        <h2 class="eyebrow" data-k="sections.contact"></h2>
+        <ul class="meta">
+          <li data-k="location"></li>
+          <li class="relo" data-k="relocation"></li>
+          <li><a class="mail" id="emailLink"></a></li>
+          <li data-k="phone"></li>
+        </ul>
+      </section>
+    </aside>
+
+    <div class="body">
+      <section class="block profile">
+        <h2 class="eyebrow" data-k="sections.profile"></h2>
+        <p class="lead" data-k="summary"></p>
+      </section>
+
+      <div class="body-cols">
+        <section class="block exp">
+          <h2 class="section-title" data-k="sections.experience"></h2>
+          <div class="timeline" id="experience"></div>
+        </section>
+        <section class="block proj">
+          <h2 class="section-title" data-k="sections.projects"></h2>
+          <ul class="bullets" id="projects"></ul>
+        </section>
+      </div>
+    </div>
+
+    <aside class="extra">
+      <section class="side-block">
+        <h2 class="eyebrow" data-k="sections.skills"></h2>
+        <div id="skills"></div>
+      </section>
+
+      <section class="side-block">
+        <h2 class="eyebrow" data-k="sections.education"></h2>
+        <p class="edu-school" data-k="edu.school"></p>
+        <p class="edu-full" data-k="edu.full"></p>
+        <p class="edu-field" data-k="edu.field"></p>
+        <p class="edu-note" data-k="edu.note"></p>
+      </section>
+
+      <section class="side-block">
+        <h2 class="eyebrow" data-k="sections.languages"></h2>
+        <ul class="langlist" id="langlist"></ul>
+      </section>
+    </aside>
+  </article>
+</main>
+
+<script>
+const CONTACT = { phone:"+7 995 117 56 47", email:"alexanderandrievski@gmail.com" };
+
+const I18N = {
+  en:{
+    name:"Alexander Andrievski",
+    role:"Project Manager · Infrastructure & AV Delivery",
+    location:"Moscow, Russia", relocation:"Open to relocation",
+    phone:CONTACT.phone,
+    summary:"Project manager with 7+ years delivering complex, multi-site technical infrastructure — audiovisual, structured cabling, monitoring, and embedded electronics. Over the last 9 months, coordinated and launched 10 regional offices for T-Bank across Russia, aligning contractors, engineering, and operations teams to meet aggressive deployment timelines. Spans the full delivery cycle — design, budgeting, vendor coordination, commissioning, and handover — with a solid technical foundation (Python, C/C++) and a record of bringing mission-critical builds live on schedule.",
+    sections:{profile:"Profile", experience:"Experience", projects:"Key Achievements", skills:"Skills", education:"Education", languages:"Languages", contact:"Contact"},
+    jobs:[
+      {title:"Project Manager — Multimedia Infrastructure", org:"T-Bank (formerly Tinkoff)", note:" — one of Russia’s largest digital banks", date:"Sep 2025 – Present", points:[
+        "Coordinated and launched 10 regional offices in 9 months across 9 cities — Ufa, Novosibirsk, Krasnoyarsk, Innopolis, Sochi, Samara, Saratov, Nizhny Novgorod, and Yekaterinburg — delivering AV/multimedia, structured cabling (SCS), monitoring, and digital-signage systems end to end.",
+        "Single point of accountability for each site, aligning external contractors and the electrical, low-voltage/networking, and operations teams against fixed milestones and budgets.",
+        "Ran multiple simultaneous multi-city rollouts in a fast-paced, high-growth environment, owning timelines, dependencies, risk, and on-site commissioning through to handover.",
+        "Standardized deployment and acceptance procedures across sites, improving predictability and reducing rework."
+      ]},
+      {title:"Embedded Developer", org:"NV-LAB", note:" — electronics & embedded systems R&D", date:"2023 – 2025", points:[
+        "Designed electronic and electromechanical assemblies, schematics, and PCBs end to end.",
+        "Developed device firmware in C/C++ and built automated test benches for electronics validation (C/C++/Python).",
+        "Optimized designs for manufacturability and compiled product-certification documentation."
+      ]},
+      {title:"Lead Pro-AV Engineer", org:"Umny Vek (Smart Age)", note:" — multimedia systems integrator", date:"Oct 2018 – Oct 2022", points:[
+        "Designed and delivered AV/multimedia systems: schematics, equipment specs, and project cost estimates.",
+        "Calculated acoustic and power-load parameters, selected components, and led on-site commissioning and handover.",
+        "Integrated multimedia systems into centralized control platforms and smart-building ecosystems."
+      ]}
+    ],
+    projects:[
+      "10 T-Bank regional offices delivered turnkey across 9 cities — AV, SCS, monitoring, and digital signage.",
+      "Digital-environment build-out across eight Russian Railways (RZD) universities and colleges.",
+      "Video-conferencing (VCS) deployments for the Moscow Department of Transport, Sotex, Rapharma, Agroeko, Ekomiks, and Mosgortur.",
+      "Signature multimedia complexes — interactive wayfinding at the Moscow Zoo, and corporate broadcasting for Cherkizovo (PJSC) and the Federal Customs Service of Russia (FTS)."
+    ],
+    skills:[
+      {label:"Project Delivery", items:["Multi-site rollouts","Vendor & contractor coordination","Budgeting & cost estimates","Timeline, risk & dependencies","Commissioning & handover","Stakeholder alignment"]},
+      {label:"Infrastructure & Systems", items:["AV / multimedia","Structured cabling (SCS)","Monitoring & observability","Digital signage","Smart-building integration","Electronics & firmware"]},
+      {label:"Automation", items:["Process automation","Test & QA automation","Scripting (Python, C/C++)"]}
+    ],
+    edu:{school:"RUDN University", full:"Peoples’ Friendship University of Russia — Moscow", field:"Applied Mathematics and Computer Science", note:"Five years of study spanning applied mathematics, algorithms, data structures, and software development."},
+    languages:[{a:"Russian",b:" — native"},{a:"English",b:" — working proficiency"}],
+    ui:{print:"Print / PDF", portrait:"Portrait", landscape:"Landscape"}
+  },
+
+  hy:{
+    name:"Ալեքսանդր Անդրիևսկի",
+    role:"Նախագծերի մենեջեր · Ենթակառուցվածք և AV",
+    location:"Մոսկվա, Ռուսաստան", relocation:"Պատրաստ եմ տեղափոխվելու",
+    phone:CONTACT.phone,
+    summary:"Նախագծերի մենեջեր՝ 7+ տարվա փորձով բարդ, բազմակետ տեխնիկական ենթակառուցվածքների իրականացման ոլորտում — աուդիովիզուալ համակարգեր, կառուցվածքային մալուխացում (SCS), մոնիթորինգ և ներկառուցված էլեկտրոնիկա։ Վերջին 9 ամսում համակարգել և գործարկել եմ T-Bank-ի 10 տարածաշրջանային գրասենյակ Ռուսաստանի տարբեր քաղաքներում՝ համաձայնեցնելով կապալառուներին, ինժեներական և գործառնական թիմերը սեղմ ժամկետներում։ Ղեկավարում եմ ողջ ցիկլը՝ նախագծում, բյուջետավորում, մատակարարների հետ աշխատանք, գործարկում և հանձնում, ամուր տեխնիկական հիմքով (Python, C/C++) և կարևորագույն օբյեկտները ժամանակին գործարկելու փորձով։",
+    sections:{profile:"Իմ մասին", experience:"Աշխատանքային փորձ", projects:"Հիմնական ձեռքբերումներ", skills:"Հմտություններ", education:"Կրթություն", languages:"Լեզուներ", contact:"Կապ"},
+    jobs:[
+      {title:"Նախագծերի մենեջեր — մուլտիմեդիա ենթակառուցվածք", org:"T-Bank (նախկինում՝ Tinkoff)", note:" — Ռուսաստանի խոշորագույն թվային բանկերից մեկը", date:"Սեպ 2025 – առ այսօր", points:[
+        "9 ամսում համակարգել և գործարկել եմ 10 տարածաշրջանային գրասենյակ 9 քաղաքում (Ուֆա, Նովոսիբիրսկ, Կրասնոյարսկ, Իննոպոլիս, Սոչի, Սամարա, Սարատով, Նիժնի Նովգորոդ, Եկատերինբուրգ)՝ ապահովելով AV/մուլտիմեդիա, SCS, մոնիթորինգ և digital signage՝ սկզբից մինչև վերջ։",
+        "Յուրաքանչյուր օբյեկտի պատասխանատվության միասնական կետ՝ համակարգելով արտաքին կապալառուներին, էլեկտրական, թույլ հոսանքի/ցանցային և գործառնական թիմերը ֆիքսված ժամկետների ու բյուջեների շրջանակում։",
+        "Վարել եմ մի քանի զուգահեռ գործարկում տարբեր քաղաքներում՝ արագ աճի պայմաններում, պատասխանատու լինելով ժամկետների, կախվածությունների, ռիսկերի և տեղում գործարկման ու հանձնման համար։",
+        "Ստանդարտացրել եմ տեղակայման և ընդունման գործընթացները՝ բարձրացնելով կանխատեսելիությունը և նվազեցնելով վերամշակումները։"
+      ]},
+      {title:"Ներկառուցված համակարգերի ծրագրավորող", org:"NV-LAB", note:" — էլեկտրոնիկայի և ներկառուցված համակարգերի մշակում", date:"2023 – 2025", points:[
+        "Նախագծել եմ էլեկտրոնային և էլեկտրամեխանիկական հանգույցներ, սխեմաներ և տպասալիկներ՝ սկզբից մինչև վերջ։",
+        "Մշակել եմ սարքերի firmware C/C++-ով և ստեղծել ավտոմատացված փորձարկման ստենդեր (C/C++/Python)։",
+        "Օպտիմալացրել եմ նախագծերը արտադրության համար և կազմել սերտիֆիկացման փաստաթղթեր։"
+      ]},
+      {title:"Առաջատար pro-AV ինժեներ", org:"Umny Vek (Smart Age)", note:" — մուլտիմեդիա համակարգերի ինտեգրատոր", date:"Հոկ 2018 – Հոկ 2022", points:[
+        "Նախագծել և իրականացրել եմ AV/մուլտիմեդիա համակարգեր՝ սխեմաներ, սարքավորումների բնութագրեր և նախահաշիվներ։",
+        "Հաշվարկել եմ ակուստիկ և էներգետիկ պարամետրեր, ընտրել բաղադրիչներ և ղեկավարել տեղում գործարկումն ու հանձնումը։",
+        "Ինտեգրել եմ մուլտիմեդիա համակարգերը կենտրոնացված կառավարման և խելացի շենքի էկոհամակարգերում։"
+      ]}
+    ],
+    projects:[
+      "T-Bank-ի 10 տարածաշրջանային գրասենյակ՝ պատրաստի վիճակում 9 քաղաքում — AV, SCS, մոնիթորինգ, digital signage։",
+      "Թվային տարածքի ստեղծում ՌԵ-ի (Ռուսական երկաթուղիներ) ութ բուհերում և քոլեջներում։",
+      "Վիդեոկոնֆերանս կապի (VCS) համակարգեր Մոսկվայի տրանսպորտի դեպարտամենտի, «Սոտեքս»-ի, «Ռաֆարմա»-ի, «Ագրոէկո»-ի, «Էկոմիքս»-ի և «Մոսգորտուր»-ի համար։",
+      "Եզակի մուլտիմեդիա համալիրներ — ինտերակտիվ կողմնորոշում Մոսկվայի կենդանաբանական այգում և կորպորատիվ հեռարձակում «Չերկիզովո» ՓԲԸ-ի և Ռուսաստանի Մաքսային ծառայության (ԴՄԾ) համար։"
+    ],
+    skills:[
+      {label:"Նախագծերի կառավարում", items:["Բազմակետ գործարկումներ","Կապալառուների համակարգում","Նախահաշիվներ և բյուջեներ","Ժամկետներ, ռիսկեր, կախվածություն","Գործարկում և հանձնում","Շահագրգիռ կողմեր"]},
+      {label:"Ենթակառուցվածք և համակարգեր", items:["AV / մուլտիմեդիա","Կառուցվածքային մալուխացում (SCS)","Մոնիթորինգ","Digital signage","Խելացի շենքի ինտեգրում","Էլեկտրոնիկա և firmware"]},
+      {label:"Ավտոմատացում", items:["Գործընթացների ավտոմատացում","Թեստավորման ավտոմատացում","Սկրիպտներ (Python, C/C++)"]}
+    ],
+    edu:{school:"ՌՈՒԴՆ համալսարան", full:"Ռուսաստանի ժողովուրդների բարեկամության համալսարան — Մոսկվա", field:"Կիրառական մաթեմատիկա և ինֆորմատիկա", note:"Հինգ տարվա ուսում՝ կիրառական մաթեմատիկա, ալգորիթմներ, տվյալների կառուցվածքներ և ծրագրային ապահովման մշակում։"},
+    languages:[{a:"Ռուսերեն",b:" — մայրենի"},{a:"Անգլերեն",b:" — աշխատանքային մակարդակ"}],
+    ui:{print:"Տպել / PDF", portrait:"Ուղղաձիգ", landscape:"Հորիզոնական"}
+  },
+
+  ru:{
+    name:"Александр Андриевский",
+    role:"Менеджер проектов · Инфраструктура и AV",
+    location:"Москва, Россия", relocation:"Готов к переезду",
+    phone:CONTACT.phone,
+    summary:"Менеджер проектов с опытом 7+ лет в реализации сложной мультисайтовой технической инфраструктуры — аудиовизуальные системы, СКС, мониторинг и встраиваемая электроника. За последние 9 месяцев согласовал и запустил 10 региональных офисов Т-Банка по всей России, координируя подрядчиков, инженерные и операционные команды в сжатые сроки. Веду полный цикл: проектирование, сметы, работа с поставщиками, пусконаладка и сдача — с прочной технической базой (Python, C/C++) и опытом ввода ответственных объектов в срок.",
+    sections:{profile:"О себе", experience:"Опыт работы", projects:"Ключевые достижения", skills:"Навыки", education:"Образование", languages:"Языки", contact:"Контакты"},
+    jobs:[
+      {title:"Менеджер проектов — мультимедийная инфраструктура", org:"Т-Банк (ранее Тинькофф)", note:" — один из крупнейших цифровых банков России", date:"Сен 2025 – н. в.", points:[
+        "Согласовал и запустил 10 региональных офисов за 9 месяцев в 9 городах — Уфа, Новосибирск, Красноярск, Иннополис, Сочи, Самара, Саратов, Нижний Новгород и Екатеринбург — реализовав AV/мультимедиа, СКС, мониторинг и digital signage под ключ.",
+        "Единая точка ответственности по каждому объекту: координация внешних подрядчиков, электрики, слаботочки/сетей и операционных команд в рамках зафиксированных сроков и бюджетов.",
+        "Вёл несколько параллельных запусков в разных городах в условиях быстрого роста — отвечал за сроки, зависимости, риски и пусконаладку вплоть до сдачи.",
+        "Стандартизировал процессы развёртывания и приёмки по объектам, повысив предсказуемость и снизив переделки."
+      ]},
+      {title:"Инженер-разработчик встраиваемых систем", org:"NV-LAB", note:" — разработка электроники и встраиваемых систем", date:"2023 – 2025", points:[
+        "Разрабатывал электронные и электромеханические узлы, схемы и печатные платы под ключ.",
+        "Создавал прошивки устройств на C/C++ и автоматизированные стенды для тестирования электроники (C/C++/Python).",
+        "Оптимизировал изделия под производство и готовил документацию для сертификации."
+      ]},
+      {title:"Ведущий инженер pro-AV", org:"Умный Век", note:" — интегратор мультимедийных систем", date:"Окт 2018 – Окт 2022", points:[
+        "Проектировал и реализовывал AV/мультимедийные системы: схемы, спецификации оборудования и сметы.",
+        "Рассчитывал акустические и энергетические параметры, подбирал комплектующие, вёл пусконаладку и сдачу на объекте.",
+        "Интегрировал мультимедийные системы в централизованные системы управления и экосистемы умного дома."
+      ]}
+    ],
+    projects:[
+      "10 региональных офисов Т-Банка под ключ в 9 городах — AV, СКС, мониторинг и digital signage.",
+      "Создание цифрового пространства в восьми вузах и колледжах РЖД.",
+      "Системы видео-конференц-связи (ВКС) для Департамента транспорта Москвы, «Сотекс», «Рафарма», «Агроэко», «Экомикс» и «Мосгортур».",
+      "Уникальные мультимедийные комплексы — интерактивная навигация в Московском зоопарке и корпоративное вещание для ПАО «Черкизово» и ФТС России."
+    ],
+    skills:[
+      {label:"Управление проектами", items:["Мультисайтовые запуски","Координация подрядчиков","Сметы и бюджеты","Сроки, риски, зависимости","Пусконаладка и сдача","Работа со стейкхолдерами"]},
+      {label:"Инфраструктура и системы", items:["AV / мультимедиа","СКС","Мониторинг","Digital signage","Интеграция умного дома","Электроника и прошивки"]},
+      {label:"Автоматизация", items:["Автоматизация процессов","Автоматизация тестирования","Скрипты (Python, C/C++)"]}
+    ],
+    edu:{school:"РУДН", full:"Российский университет дружбы народов — Москва", field:"Прикладная математика и информатика", note:"Пять лет обучения: прикладная математика, алгоритмы, структуры данных и разработка ПО."},
+    languages:[{a:"Русский",b:" — родной"},{a:"Английский",b:" — рабочий уровень"}],
+    ui:{print:"Печать / PDF", portrait:"Книжная", landscape:"Альбомная"}
+  }
+};
+
+function get(obj, path){ return path.split(".").reduce((o,k)=> (o==null?undefined:o[k]), obj); }
+
+function render(lang){
+  const d = I18N[lang];
+  document.documentElement.lang = lang;
+
+  document.querySelectorAll("[data-k]").forEach(el=>{
+    const v = get(d, el.getAttribute("data-k"));
+    if(typeof v === "string") el.textContent = v;
+  });
+
+  const mail = document.getElementById("emailLink");
+  mail.textContent = CONTACT.email; mail.href = "mailto:"+CONTACT.email;
+
+  // skills
+  const sk = document.getElementById("skills"); sk.innerHTML = "";
+  d.skills.forEach(g=>{
+    const grp = document.createElement("div"); grp.className="skill-group";
+    const cap = document.createElement("p"); cap.className="skill-cap"; cap.textContent=g.label; grp.appendChild(cap);
+    const chips = document.createElement("div"); chips.className="chips";
+    g.items.forEach(it=>{ const c=document.createElement("span"); c.className="chip"; c.textContent=it; chips.appendChild(c); });
+    grp.appendChild(chips); sk.appendChild(grp);
+  });
+
+  // experience
+  const ex = document.getElementById("experience"); ex.innerHTML="";
+  d.jobs.forEach(j=>{
+    const job=document.createElement("div"); job.className="job";
+    const head=document.createElement("div"); head.className="job-head";
+    const t=document.createElement("p"); t.className="job-title"; t.textContent=j.title;
+    const dt=document.createElement("span"); dt.className="job-date"; dt.textContent=j.date;
+    head.append(t,dt);
+    const org=document.createElement("p"); org.className="job-org";
+    org.innerHTML = j.org + '<span class="note">'+ (j.note||"") +'</span>';
+    const ul=document.createElement("ul"); ul.className="bullets";
+    j.points.forEach(p=>{ const li=document.createElement("li"); li.textContent=p; ul.appendChild(li); });
+    job.append(head,org,ul); ex.appendChild(job);
+  });
+
+  // projects
+  const pr=document.getElementById("projects"); pr.innerHTML="";
+  d.projects.forEach(p=>{ const li=document.createElement("li"); li.textContent=p; pr.appendChild(li); });
+
+  // languages
+  const ll=document.getElementById("langlist"); ll.innerHTML="";
+  d.languages.forEach(l=>{ const li=document.createElement("li"); li.innerHTML="<b>"+l.a+"</b>"+l.b; ll.appendChild(li); });
+
+  // ui labels
+  document.getElementById("lbl-print").textContent = d.ui.print;
+  document.getElementById("who").textContent = d.role.split("·")[0].trim();
+}
+
+function setLang(lang){
+  document.querySelectorAll("#langs button").forEach(b=> b.setAttribute("aria-pressed", b.dataset.lang===lang));
+  render(lang);
+}
+
+document.getElementById("langs").addEventListener("click", e=>{ const b=e.target.closest("button"); if(b) setLang(b.dataset.lang); });
+document.getElementById("printBtn").addEventListener("click", ()=> window.print());
+
+setLang("en");
+</script>
+</body>
+</html>
